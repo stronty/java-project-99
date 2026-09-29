@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "4.1.1"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("org.sonarqube") version "7.5.0.8588"
 	jacoco
 }
 
@@ -29,6 +30,13 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testAnnotationProcessor("org.projectlombok:lombok")
+}
+
+sonar {
+	properties {
+		property("sonar.projectKey", "stronty_java-project-99")
+		property("sonar.organization", "stronty")
+	}
 }
 jacoco {
 	toolVersion = "0.8.15"
