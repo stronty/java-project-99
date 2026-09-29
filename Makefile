@@ -1,2 +1,5 @@
 setup:
-	./AppApplication/gradlew run
+	cd AppApplication && ./gradlew build -x test
+
+start:
+	cd AppApplication && ./gradlew bootRun
