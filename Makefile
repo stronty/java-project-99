@@ -1,0 +1,2 @@
+setup:
+	./AppApplication/gradlew run
