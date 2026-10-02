@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk AS build
+FROM eclipse-temurin:25-jdk AS build
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY AppApplication/src src
 
 RUN ./gradlew --no-daemon bootJar -x test
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 
 WORKDIR /app
 
