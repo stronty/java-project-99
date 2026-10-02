@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/assets/**", "/welcome",
                                 "/api/login", "/h2-console/**", "/error",
-                                "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                "/swagger-ui.html", "/swagger-ui/**","/favicon.ico", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
         return http.build();
