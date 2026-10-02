@@ -9,9 +9,11 @@ import hexlet.code.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+
+import hexlet.code.model.Task;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
+import hexlet.code.repository.TaskRepository;
 import java.util.List;
 
 @Component
@@ -34,12 +36,27 @@ public class DataInitializer implements ApplicationRunner {
     private final TaskStatusRepository statusRepository;
     private final LabelRepository labelRepository;
     private final PasswordEncoder encoder;
-
+    private final TaskRepository taskRepository;
     @Override
     public void run(ApplicationArguments args) {
         createAdmin();
         createStatuses();
         createLabels();
+        createWelcomeTask();
+    }
+
+    private void createWelcomeTask() {
+        if (taskRepository.count() > 0) {
+            return;
+        }
+        var admin = userRepository.findByEmail(ADMIN_EMAIL).orElseThrow();
+        var draft = statusRepository.findBySlug("draft").orElseThrow();
+        var task = new Task();
+        task.setName("Welcome task");
+        task.setDescription("Created on first start so the board is not empty");
+        task.setTaskStatus(draft);
+        task.setAssignee(admin);
+        taskRepository.save(task);
     }
 
     private void createAdmin() {
