@@ -62,7 +62,9 @@ jacoco {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
-
+dependencyLocking {
+	lockAllConfigurations()
+}
 tasks.test {
 	finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
