@@ -407,7 +407,77 @@ class TasksControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }
+    @Test
+    void updateIndexAndAssignee() throws Exception {
+        var user = new User();
+        user.setEmail("newassignee@example.com");
+        user.setPassword(passwordEncoder.encode("secret"));
+        extraUser = userRepository.save(user);
+        var task = createTask("Task");
 
+        mockMvc.perform(put("/api/tasks/" + task.getId())
+                        .header("Authorization", bearer(adminToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {"index": 99, "assignee_id": %d}
+                            """.formatted(extraUser.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.index").value(99))
+                .andExpect(jsonPath("$.assignee_id").value(extraUser.getId()))
+                .andExpect(jsonPath("$.title").value("Task"));
+    }
+
+    @Test
+    void updateWithUnknownStatusGives400() throws Exception {
+        var task = createTask("Task");
+
+        mockMvc.perform(put("/api/tasks/" + task.getId())
+                        .header("Authorization", bearer(adminToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {"status": "no_such_status"}
+                            """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateWithUnknownAssigneeGives400() throws Exception {
+        var task = createTask("Task");
+
+        mockMvc.perform(put("/api/tasks/" + task.getId())
+                        .header("Authorization", bearer(adminToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {"assignee_id": 999999}
+                            """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateWithUnknownLabelGives400() throws Exception {
+        var task = createTask("Task");
+
+        mockMvc.perform(put("/api/tasks/" + task.getId())
+                        .header("Authorization", bearer(adminToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {"taskLabelIds": [999999]}
+                            """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateWithBlankTitleGives400() throws Exception {
+        var task = createTask("Task");
+
+        mockMvc.perform(put("/api/tasks/" + task.getId())
+                        .header("Authorization", bearer(adminToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {"title": ""}
+                            """))
+                .andExpect(status().isBadRequest());
+    }
     @Test
     void noParamsReturnsAll() throws Exception {
         createTaskWith("One", draft, admin);
