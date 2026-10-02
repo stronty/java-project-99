@@ -25,9 +25,9 @@ public class DataInitializer implements ApplicationRunner {
 
     private static final List<StatusSeed> DEFAULT_STATUSES = List.of(
             new StatusSeed("draft", "Draft"),
-            new StatusSeed("to_review", "ToReview"),
-            new StatusSeed("to_be_fixed", "ToBeFixed"),
-            new StatusSeed("to_publish", "ToPublish"),
+            new StatusSeed("to_review", "To Review"),
+            new StatusSeed("to_be_fixed", "To BeFixed"),
+            new StatusSeed("to_publish", "To Publish"),
             new StatusSeed("published", "Published"));
 
     private static final List<String> DEFAULT_LABELS = List.of("feature", "bug");
