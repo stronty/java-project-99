@@ -37,26 +37,28 @@ public class DataInitializer implements ApplicationRunner {
     private final LabelRepository labelRepository;
     private final PasswordEncoder encoder;
     private final TaskRepository taskRepository;
+
     @Override
     public void run(ApplicationArguments args) {
         createAdmin();
         createStatuses();
         createLabels();
-        createWelcomeTask();
+        createTasks();
     }
 
-    private void createWelcomeTask() {
+    private void createTasks() {
         if (taskRepository.count() > 0) {
             return;
         }
         var admin = userRepository.findByEmail(ADMIN_EMAIL).orElseThrow();
-        var draft = statusRepository.findBySlug("draft").orElseThrow();
-        var task = new Task();
-        task.setName("Welcome task");
-        task.setDescription("Created on first start so the board is not empty");
-        task.setTaskStatus(draft);
-        task.setAssignee(admin);
-        taskRepository.save(task);
+        for (var seed : DEFAULT_STATUSES) {
+            var task = new Task();
+            task.setName("Task: " + seed.name());
+            task.setDescription("Default task for the " + seed.name() + " column");
+            task.setTaskStatus(statusRepository.findBySlug(seed.slug()).orElseThrow());
+            task.setAssignee(admin);
+            taskRepository.save(task);
+        }
     }
 
     private void createAdmin() {
