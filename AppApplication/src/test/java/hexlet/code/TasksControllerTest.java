@@ -1,4 +1,4 @@
-package hexlet.code.controllers;
+package hexlet.code;
 
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
